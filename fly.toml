@@ -1,0 +1,36 @@
+# fly.toml app configuration file generated for palmetto-demo on 2023-10-23T23:32:07-07:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "palmetto-demo"
+primary_region = "sjc"
+
+# SQL Port
+[[services]]
+  internal_port = 5432
+
+# RPC Port (Inter-node communication, does not have to be exposed)
+[[services]]
+  internal_port = 26257
+
+# Admin Dashboard
+[http_service]
+  internal_port = 8080  
+
+[mounts]
+  source = "cockroach_data_mount"
+  destination = "cockroach-data-mount"
+  
+# healthcheck
+[[http_service.checks]]
+  grace_period = "10s"
+  interval = "30s"
+  method = "GET"
+  timeout = "5s"
+  path = "/health"
+
+# prometheus endpoint
+[metrics]
+  port = 8080
+  path = "/_status/vars"
