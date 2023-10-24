@@ -2,7 +2,7 @@
 
 ### Palmetto Bug: (n.) A flying cockroach
 
-(Almost working)
+(Almost working, currently having certificate issues)
 
 This repo deploys CockroachDB on Fly.io.
 
@@ -19,7 +19,7 @@ This repo deploys CockroachDB on Fly.io.
   - `PALMETTO_WEBHOOK_URL` is an optional Discord webhook url, and can be tested by running `source .sh/dev/test-webhook.sh`
 - Generate Cockroachdb certs (exclude the -r flag to load preexisting certs)
   ```
-  source .sh/dev/create-secrets.sh -r
+  source .sh/dev/create-certs.sh -r
   ```
 - Deploy the app
   ```
@@ -29,16 +29,16 @@ This repo deploys CockroachDB on Fly.io.
   ```
   flyctl status
   ```
-- When it's finished, proxy the ports to your local machine, then visit the console at http://localhost:8080 and log in with "server" and the password you set in the `.env` file.
+- When it's finished, proxy the ports to your local machine, then visit the console at http://localhost:8080 and log in with username "server" and the password you set in the `.env` file.
   ```
   bash .sh/fly/proxy.sh
   ```
-- After the first node is up, you can add more nodes to the cluster. They will automatically join, and nodes in regions will geopartition the data correctly. You can see all the available regions with `flyctl platform regions`.
+- After the first node is up, you can add more nodes to the cluster. They will automatically join, and nodes in different regions will geopartition the data correctly. You can see all the available regions with `flyctl platform regions`.
   ```
   flyctl scale count 1 --region cdg # France
   flyctl scale count 1 --region nrt # Japan
   ```
-- You can find your postgres url with the following command. Your app will connect to the closest node in the cluster. To use ssl, you can use the cert files in the `local_certs` directory.
+- You can find your connection url with the following command. Your app will connect to the closest node in the cluster. To use ssl, you can use the cert files in the `local_certs` directory.
   ```
   bash .sh/dev/postgres-url.sh
   ```
