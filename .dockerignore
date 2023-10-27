@@ -1,0 +1,10 @@
+# flyctl launch added from .gitignore
+**/node_modules
+**/.venv
+**/.env
+**/local_certs
+**/package-lock.json
+**/package.json
+**/.prettierrc
+*cockroach*
+fly.toml

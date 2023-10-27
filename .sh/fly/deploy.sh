@@ -4,10 +4,17 @@
 source .env
 echo $PALMETTO_APP_NAME
 
-# set the rpc and sql ports and the mount size
-flyctl secrets set PALMETTO_RPC_PORT=$PALMETTO_RPC_PORT --app $PALMETTO_APP_NAME --stage
-flyctl secrets set PALMETTO_SQL_PORT=$PALMETTO_SQL_PORT --app $PALMETTO_APP_NAME --stage
-flyctl secrets set PALMETTO_MOUNT_SIZE=$PALMETTO_MOUNT_SIZE --app $PALMETTO_APP_NAME --stage
+function fly_secret(){
+  local secret_value="${!1}"
+  flyctl secrets set $1="$secret_value" --app $PALMETTO_APP_NAME --stage
+}
+
+# set the environment variables
+fly_secret PALMETTO_RPC_PORT
+fly_secret PALMETTO_SQL_PORT
+fly_secret PALMETTO_MOUNT_SIZE
+fly_secret PALMETTO_SERVER_PASSWORD
+fly_secret PALMETTO_WEBHOOK_URL
 
 # Deploy the app
 fly deploy --remote-only \
