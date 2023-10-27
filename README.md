@@ -9,7 +9,11 @@ Although Fly Machines are limited to 500gb of disk storage, Cockroach claims to 
 
 ## Deploying
 
-- Ensure the Fly CLI and Docker are installed
+- Install and setup flyctl if you don't already have it
+  ```
+  curl -L https://fly.io/install.sh | sh
+  flyctl
+  ```
 - Clone the repo
   ```
   git clone https://github.com/kahnpoint/palmetto
@@ -47,7 +51,7 @@ Although Fly Machines are limited to 500gb of disk storage, Cockroach claims to 
     ```
     cd palmetto-test
     bash .sh/deploy.sh
-    fly ssh console
+    flyctl ssh console
     ```
   - Then, connect to "palmetto" from the "palmetto-test" ssh console with
     ```
