@@ -63,5 +63,5 @@ Although Fly Machines are limited to 500gb of disk storage, Cockroach claims to 
   flyctl scale count 1 --region cdg # France
   flyctl scale count 1 --region nrt # Japan
   ```
-  -  After running the 2 commands above, after a few minutes, you should be able to see "Live Nodes = 3" in the console, with the updated capacity.
+  -  After running the 2 commands above, after a few minutes, you should be able to see "Live Nodes = 3" in the dashboard, with the updated capacity.
 - You now have a globally-distributed infintely-scaleable postgres-compatible database. Have fun!
