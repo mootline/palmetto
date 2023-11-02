@@ -12,11 +12,12 @@ Although Fly Machines are limited to 500gb of disk storage, Cockroach claims to 
 - Install and setup flyctl if you don't already have it
   ```
   curl -L https://fly.io/install.sh | sh
-  flyctl
+  flyctl auth login
   ```
 - Clone the repo
   ```
   git clone https://github.com/kahnpoint/palmetto
+  cd palmetto
   ```
 - Change the app name in the `fly.toml` file to something unique
 - Change `.env.example` to `.env` and fill in the values.
