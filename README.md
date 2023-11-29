@@ -2,7 +2,7 @@
 
 ### Palmetto Bug: (n.) A flying cockroach
 
-(Working as of 2022-10-27)
+(Working as of 2023-10-27)
 
 This repo deploys CockroachDB on Fly.io.
 Although Fly Machines are limited to 500gb of disk storage, Cockroach claims to be able to scale linearly and there is definitely an advantage to being able to use Fly's anycast network to connect with a single url.
