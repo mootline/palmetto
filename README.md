@@ -4,22 +4,25 @@
 (Working as of 2024-03-06)
 
 This repo deploys CockroachDB on Fly.io. Features include:
-  - Certificate management
-  - Support for multiple environments (dev/prod/etc.)
   - Automatic S3 backups
   - Geopartitioning
+  - Geospatial libraries
+  - Certificate management
+  - Support for multiple environments (dev/prod/etc.)
   - Utilities for generating connection strings, backup URLs, and local proxies
 
 ## Setup
 
 - Install and setup flyctl if you don't already have it
   ```bash
-  curl -L https://fly.io/install.sh | sh && flyctl auth login
+  curl -L https://fly.io/install.sh | sh
+  flyctl auth login
   ```
   
 - Clone the repo
   ```bash
-  git clone https://github.com/mootline/palmetto && cd palmetto
+  git clone https://github.com/mootline/palmetto
+  cd palmetto
   ```
 
 - Setup the project with `bash .sh/dev/setup.sh` 
@@ -42,8 +45,10 @@ This repo deploys CockroachDB on Fly.io. Features include:
   
 - When it's finished, proxy the ports to your local machine with `bash .sh/fly/proxy.sh`
 
-  - Visit the console at http://localhost:8080 and log in with the username and password you set in the `.env` file.
-  - The default behavior of this setup is to only allow connections from other Fly apps within the same organization. If you need to connect from outside the Fly network, you can either proxy it as shown above or add external ports to the `fly.toml.template` (not recommended).
+  - Visit the console at https://localhost:8080 and log in with the username and password you set in the `.env` file.
+    - Your browser will probably complain about the certificate. This is expected behavior, as the certificate is self-signed. You can ignore the warning and proceed to the site.
+  - The default behavior of this setup is to only allow connections from other Fly apps within the same organization. 
+    - If you need to connect from outside the Fly network, you can either proxy it as shown above or add external ports to the `fly.toml.template` (not recommended).
 
 - After the first node is up, you can add more nodes to the cluster. They will automatically join, and nodes in different regions will geopartition the data correctly. You can see all the available regions with `flyctl platform regions`.
   ```

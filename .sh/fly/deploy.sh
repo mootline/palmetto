@@ -46,4 +46,5 @@ fi
 
 # Deploy the app
 fly deploy --remote-only \
+  --volume_initial_size $PALMETTO_VM_DISK_MOUNT_INITIAL_SIZE \
   --app $PALMETTO_APP_NAME
