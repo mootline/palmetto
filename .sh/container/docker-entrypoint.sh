@@ -60,7 +60,7 @@ cockroach cert create-node \
     "${FLY_PUBLIC_IP}:${PALMETTO_SQL_PORT}" \
     "${FLY_REGION}.${FLY_APP_NAME}.internal:${PALMETTO_SQL_PORT}" \
     "${FLY_REGION}.${FLY_APP_NAME}.internal \
-    "${FLY_ALLOC_ID}:${PALMETTO_SQL_PORT}" \
+    "${FLY_ALLOC_ID}.vm.${FLY_APP_NAME}.internal:${PALMETTO_SQL_PORT}" \
     "${FLY_ALLOC_ID}.vm.${FLY_APP_NAME}.internal:${PALMETTO_RPC_PORT}" \
     "${FLY_ALLOC_ID}.vm.${FLY_APP_NAME}.internal" \
     "${FLY_PUBLIC_IP}:${PALMETTO_RPC_PORT}" \
@@ -97,7 +97,7 @@ cockroach start \
     --max-offset=250ms \
     --cluster-name="${FLY_APP_NAME}" \
     --locality="region=${FLY_REGION}" \
-    --store="path=/cockroach-data-mount,size=${PALMETTO_MOUNT_SIZE}GiB" \
+    --store="path=/cockroach-data-mount,size=${PALMETTO_DISK_MOUNT_INITIAL_SIZE}GiB" \
     --accept-sql-without-tls \
     --pid-file=/tmp/cockroach.pid \
     --certs-dir="${CERTS_DIR}" \
@@ -132,7 +132,7 @@ if [ "$(echo "$formatted_seeds" | tr -cd ',' | wc -c)" -eq 0 ]; then
         # --user=root 
         
     # Create the server user
-    sql "CREATE USER server WITH PASSWORD '$PALMETTO_SERVER_PASSWORD';"
+    sql "CREATE USER server WITH PASSWORD '$PALMETTO_SERVER_USER_PASSWORD';"
     
     # Grant the server user admin privileges
     # (This may be changed later)
@@ -143,14 +143,24 @@ if [ "$(echo "$formatted_seeds" | tr -cd ',' | wc -c)" -eq 0 ]; then
 fi
 
 # Make sure the server user has an up to date password
-sql "ALTER USER server WITH PASSWORD '$PALMETTO_SERVER_PASSWORD';"
-
+sql "ALTER USER server WITH PASSWORD '$PALMETTO_SERVER_USER_PASSWORD';"
 
 # tell the webhook url the node is up
-curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"roach up - ${FLY_ALLOC_ID} (${FLY_REGION})\"}" $PALMETTO_WEBHOOK_URL
-    
+curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"roach up - (${FLY_REGION} - ${FLY_ALLOC_ID})\"}" $PALMETTO_WEBHOOK_URL
+
+
+# Handle exit signals
+handle_exit() {
+    # tell the webhook url the node got scaled down or crashed for some other reason
+    curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"roach down - ${FLY_ALLOC_ID} (${FLY_REGION})\"}" $PALMETTO_WEBHOOK_URL
+    exit 1
+}
+
+# Trap the SIGINT, SIGTERM and EXIT signals to call the handle_exit function
+trap handle_exit SIGINT SIGTERM EXIT
+
 # Wait for the CockroachDB background process to complete (shouldn't happen unless there's an error)
 wait $CRDB_PID
     
-# tell the webhook url the node is down (this will not trigger if the node is stopped from the cli)
-curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"roach down - ${FLY_ALLOC_ID} (${FLY_REGION})\"}" $PALMETTO_WEBHOOK_URL
+# tell the webhook url that cockroach crashed (this will not trigger if the node is stopped from the cli)
+curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"roach crashed - ${FLY_ALLOC_ID} (${FLY_REGION})\"}" $PALMETTO_WEBHOOK_URL
