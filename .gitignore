@@ -7,3 +7,5 @@ package.json
 .prettierrc
 /*cockroach*
 .sh/fly/proxy2.sh
+Dockerfile
+fly.toml

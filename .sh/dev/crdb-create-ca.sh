@@ -3,6 +3,20 @@
 # This script generates the secrets for the server and clients.
 # It can also be used to regenerate the secrets if they are lost.
 
+# if no $1, say environment is required
+if [ -z "$1" ]; then
+  echo "Error: environment is required"
+  exit 1
+fi
+
+# Load environment variables from .env
+source .env
+
+# add environment to the app name
+PALMETTO_APP_NAME_HYPHENS=$(echo "$PALMETTO_APP_NAME" | sed 's/_/-/g')
+PALMETTO_APP_NAME="${PALMETTO_APP_NAME_HYPHENS}-$1"
+fly app create $PALMETTO_APP_NAME
+
 local_cert_directory='./local_certs'
 regen_secrets=false
 update_fly_secrets=false # add a new flag to decide whether to update fly.io secrets
@@ -16,20 +30,16 @@ while [[ $# -gt 0 ]]; do
       regen_secrets=true
       shift # past argument
       ;;
-    -u|--update_fly)
+    -s|--secrets)
       update_fly_secrets=true
       shift # past argument
       ;;
     *)
-      # Unknown option
-      echo "Unknown option: $key"
-      exit 1
+      # Unknown option (skip)
+      shift # past argument
       ;;
   esac
 done
-
-# Load environment variables from .env
-source .env
 
 save_to_fly() {
   local secret_name="$1"

@@ -1,0 +1,14 @@
+{
+	"sqltools.connections": [
+		{
+			"previewLimit": 50,
+			"server": "localhost",
+			"port": 5432,
+			"driver": "CockroachDB",
+			"name": "palmetto-dev",
+			"database": "palmetto",
+			"username": "server",
+			"password": "0f4585fe-68cf-4a4a-8542-b8b31a7cb015"
+		}
+	]
+}
