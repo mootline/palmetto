@@ -80,10 +80,6 @@ This repo deploys CockroachDB on Fly.io. Features include:
     - This will destroy the current data in the cluster.
     - You will need to drop any existing databases before restoring. If you run the command, it will tell you which ones need to be dropped.
   - Fill out the following command and run it in the SSH session 
-    - ```bash
-    cockroach sql --certs-dir "/palmetto-dev-data-mount/cockroach-certs" --execute "RESTORE FROM LATEST IN ${PALMETTO_S3_BACKUP_URL};"
-    ```
+    - ` cockroach sql --certs-dir "/palmetto-dev-data-mount/cockroach-certs" --execute "RESTORE FROM LATEST IN ${PALMETTO_S3_BACKUP_URL};"`
   - If you ever need to force a backup to run immediately, run 
-    - ```bash
-    cockroach sql --certs-dir "/palmetto-dev-data-mount/cockroach-certs" --execute "BACKUP INTO ${PALMETTO_S3_BACKUP_URL};"
-    ```
+    - `cockroach sql --certs-dir "/palmetto-dev-data-mount/cockroach-certs" --execute "BACKUP INTO ${PALMETTO_S3_BACKUP_URL};"` 
